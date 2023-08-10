@@ -1,14 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
-const validateEmail = function (email) {
-  var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return regex.test(email);
-};
-const validateMobileNo = function (mobileno) {
-  var regex = /^\d{10}$/;
-  return regex.test(mobileno);
-};
+const hashPasswordAndProceed = require('../utils/hashing');
+const { validateEmail, validateMobileNo } = require('../utils/validation');
 
 const UserSchema = Schema({
   username: {
@@ -69,6 +62,6 @@ const UserSchema = Schema({
 
 UserSchema.pre("save", hashPasswordAndProceed);
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
