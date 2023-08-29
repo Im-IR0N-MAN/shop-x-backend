@@ -38,10 +38,6 @@ const UserSchema = Schema({
     type: String,
     trim: true,
     validate: [validateMobileNo, "Please enter a valid moblie number."],
-    unique: [
-      true,
-      "Moblie number already registered. Please use a different Mobile number.",
-    ],
   },
   role: {
     type: String,
@@ -54,7 +50,7 @@ const UserSchema = Schema({
     minlength: [8, "The password should be at least 8 characters long."],
     maxlength: [
       128,
-      "The password should be less than 128 characters in length.",
+      "The password is too long.",
     ],
     select: false,
   },
