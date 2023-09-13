@@ -1,16 +1,24 @@
 const UserModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("../utils/errorHandler");
+const { validateRequest } = require("../utils/authHelper");
 
 function generateToken(id) {
   return jwt.sign({ id: id }, process.env.JWT_SECRET);
 }
 
 const register = async (req, res, next) => {
+  const { username, firstname, lastname, email, mobileno, password } = req.body;
   try {
-    // console.log(req.body);
-    const { username, firstname, lastname, email, mobileno, password } =
-      req.body;
+    validateRequest({
+      username,
+      firstname,
+      lastname,
+      email,
+      mobileno,
+      password,
+    });
+
     const newUser = await UserModel.create({
       username,
       firstname,
@@ -19,6 +27,7 @@ const register = async (req, res, next) => {
       mobileno,
       password,
     });
+
     const token = generateToken(newUser._id);
     res.json({
       token: token,
