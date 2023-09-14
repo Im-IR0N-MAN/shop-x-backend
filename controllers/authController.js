@@ -1,7 +1,7 @@
 const UserModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("../utils/errorHandler");
-const { validateRequest } = require("../utils/authHelper");
+const { validateRequest, checkIsUserRegistered } = require("../utils/authHelper");
 
 function generateToken(id) {
   return jwt.sign({ id: id }, process.env.JWT_SECRET);
@@ -18,6 +18,8 @@ const register = async (req, res, next) => {
       mobileno,
       password,
     });
+
+    await checkIsUserRegistered(username, email);
 
     const newUser = await UserModel.create({
       username,

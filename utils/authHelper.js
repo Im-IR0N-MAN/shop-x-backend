@@ -1,3 +1,4 @@
+const User = require("../models/userModel");
 const ErrorHandler = require("./errorHandler");
 const { validateEmail, validateMobileNo, validatePassword } = require("./validation");
 
@@ -23,6 +24,26 @@ const checkEmptyValues = function ({ username, firstname, lastname, email, passw
   if (!password) throw new ErrorHandler("Plz, Enter Password.", 400);
 };
 
+const checkIsUserRegistered = async function (username, email) {
+  if (await isEmailRegistered(email)) throw new ErrorHandler("Entered email is already registered", 409);
+  if (await isUsernameRegistered(username)) throw new ErrorHandler("Entered username is already registered", 409);
+};
+
+const isEmailRegistered = async function (email) {
+  email.trim();
+  const existingUser = await User.findOne({ email: email });
+  if (existingUser) return 1;
+  return 0;
+};
+
+const isUsernameRegistered = async function (username) {
+  username.trim();
+  const existingUser = await User.findOne({ username: username });
+  if (existingUser) return 1;
+  return 0;
+};
+
 module.exports = {
   validateRequest,
+  checkIsUserRegistered,
 };
